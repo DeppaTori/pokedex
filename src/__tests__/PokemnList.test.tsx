@@ -3,6 +3,19 @@ import { POKEMON_API } from "../constants";
 import { PokemonList } from "../PokemonList";
 
 describe("PokemonList", () => {
+  const responses = {
+    results: [
+      {
+        name: "spearow",
+        url: "https://pokeapi.co/api/v2/pokemon/21/",
+      },
+      {
+        name: "fearow",
+        url: "https://pokeapi.co/api/v2/pokemon/22/",
+      },
+    ],
+  };
+
   const fetchResponseOk = (body: any) =>
     Promise.resolve({
       ok: true,
@@ -10,7 +23,7 @@ describe("PokemonList", () => {
     });
 
   beforeEach(() => {
-    jest.spyOn(window, "fetch").mockReturnValue(fetchResponseOk({}));
+    jest.spyOn(window, "fetch").mockReturnValue(fetchResponseOk(responses));
   });
 
   afterEach(() => {
@@ -24,21 +37,11 @@ describe("PokemonList", () => {
   });
 
   it("renders pokemon names", async () => {
-    const responses = {
-      results: [
-        {
-          name: "spearow",
-        },
-        {
-          name: "fearow",
-        },
-      ],
-    };
-    window.fetch.mockReturnValue(fetchResponseOk(responses));
     render(<PokemonList />);
     expect(window.fetch).toHaveBeenCalledTimes(1);
     expect(
       await screen.findByText(responses.results[0].name)
     ).toBeInTheDocument();
+    expect(screen.getByText("021")).toBeInTheDocument();
   });
 });
