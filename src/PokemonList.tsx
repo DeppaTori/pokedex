@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { POKEMON_API } from "./constants";
 import { Pokemon } from "./entity/Pokemon";
+import "./PokemonList.css";
 
 export const PokemonList = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -16,9 +17,11 @@ export const PokemonList = () => {
   }, []);
 
   return (
-    <div>
+    <div className="pokemon-list-container">
       {pokemons.map((pokemon, index) => (
-        <div key={index}>{pokemon.name}</div>
+        <div className="pokemon-list-item" key={index}>
+          {pokemon.name}
+        </div>
       ))}
     </div>
   );
