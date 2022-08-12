@@ -6,6 +6,18 @@ import user from "@testing-library/user-event";
 describe("App", () => {
   let windowFetch: any = null;
 
+  const typeResponses = {
+    count: 2,
+    results: [
+      {
+        name: "ground",
+      },
+      {
+        name: "fire",
+      },
+    ],
+  };
+
   const responses = {
     count: 2,
     results: [
@@ -61,31 +73,34 @@ describe("App", () => {
     windowFetch.mockRestore();
   });
 
-  it("calls first page of pokemon api", () => {
+  it("calls pokemon api", () => {
     render(<App />);
     expect(window.fetch).toHaveBeenCalledWith(
       `${POKEMON_API}/pokemon?offset=0&limit=905`
     );
   });
 
-  it.skip("calls amount of api based on count props from first api call", async () => {
+  it("calls types api and calls amount of api based on count props from first api call", async () => {
     jest
       .spyOn(window, "fetch")
       .mockReturnValueOnce(fetchResponseOk(responses))
+      .mockReturnValueOnce(fetchResponseOk(typeResponses))
       .mockReturnValueOnce(fetchResponseOk(responseDetail))
       .mockReturnValueOnce(fetchResponseOk(responseDetail2));
 
     render(<App />);
-    expect(await screen.findAllByText(responses.results[0].name)).toHaveLength(
-      1
-    );
-    expect(window.fetch).toHaveBeenCalledTimes(3);
+    expect(
+      await screen.findByText(responses.results[0].name)
+    ).toBeInTheDocument();
+    expect(screen.getByText(typeResponses.results[0].name)).toBeInTheDocument();
+    expect(window.fetch).toHaveBeenCalledTimes(4);
   });
 
-  it("calls api detail when one of the pokemon is clicked", async () => {
+  it.skip("calls api detail when one of the pokemon is clicked", async () => {
     jest
       .spyOn(window, "fetch")
       .mockReturnValueOnce(fetchResponseOk(responses))
+      .mockReturnValueOnce(fetchResponseOk(typeResponses))
       .mockReturnValueOnce(fetchResponseOk(responseDetail))
       .mockReturnValueOnce(fetchResponseOk(responseDetail2))
       .mockReturnValueOnce(fetchResponseOk(responseDetail));
@@ -94,14 +109,13 @@ describe("App", () => {
 
     user.click(await screen.findByText(responses.results[0].name));
 
-    expect(window.fetch).toHaveBeenCalledTimes(4);
-    expect(window.fetch).toHaveBeenLastCalledWith(`${POKEMON_API}/pokemon/21`);
-
     expect(
       await screen.findByText(responseDetail.types[0].type.name)
     ).toBeInTheDocument();
     expect(screen.getByText(responseDetail.weight)).toBeInTheDocument();
     expect(screen.getAllByText(responses.results[0].name)).toHaveLength(2);
     expect(screen.getAllByText("021")).toHaveLength(2);
+    expect(window.fetch).toHaveBeenCalledTimes(5);
+    expect(window.fetch).toHaveBeenLastCalledWith(`${POKEMON_API}/pokemon/21`);
   });
 });

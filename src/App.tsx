@@ -15,6 +15,7 @@ function App() {
     pweight: 0,
   });
   const [pokemonAPIs, setPokemonAPIs] = useState<string[]>([]);
+  const [pokemonTypes, setPokemonTypes] = useState<string[]>([]);
 
   const pokemonOnClick = (id: number) => {
     const callAPI = async () => {
@@ -67,10 +68,24 @@ function App() {
     };
 
     callAPI();
+
+    const callTypesAPI = async () => {
+      const response = await fetch(`${POKEMON_API}/type`);
+      const result = await response.json();
+      setPokemonTypes(result.results.map((item: any) => item.name));
+    };
+
+    callTypesAPI();
   }, []);
 
   return (
     <div className="App">
+      <div>
+        {pokemonTypes.map((ptype, index) => (
+          <button key={index}>{ptype}</button>
+        ))}
+      </div>
+
       <PokemonDetail pokemon={currentPokemon} />
       <PokemonList pokemons={pokemons} onClick={pokemonOnClick} />
     </div>
