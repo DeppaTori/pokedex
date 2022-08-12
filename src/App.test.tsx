@@ -6,6 +6,17 @@ import user from "@testing-library/user-event";
 describe("App", () => {
   let windowFetch: any = null;
 
+  const setupRender = () => {
+    jest
+      .spyOn(window, "fetch")
+      .mockReturnValueOnce(fetchResponseOk(responses))
+      .mockReturnValueOnce(fetchResponseOk(typeResponses))
+      .mockReturnValueOnce(fetchResponseOk(responseDetail))
+      .mockReturnValueOnce(fetchResponseOk(responseDetail2));
+
+    render(<App />);
+  };
+
   const typeResponses = {
     count: 2,
     results: [
@@ -81,19 +92,25 @@ describe("App", () => {
   });
 
   it("calls types api and calls amount of api based on count props from first api call", async () => {
-    jest
-      .spyOn(window, "fetch")
-      .mockReturnValueOnce(fetchResponseOk(responses))
-      .mockReturnValueOnce(fetchResponseOk(typeResponses))
-      .mockReturnValueOnce(fetchResponseOk(responseDetail))
-      .mockReturnValueOnce(fetchResponseOk(responseDetail2));
-
-    render(<App />);
+    setupRender();
     expect(
       await screen.findByText(responses.results[0].name)
     ).toBeInTheDocument();
     expect(screen.getByText(typeResponses.results[0].name)).toBeInTheDocument();
     expect(window.fetch).toHaveBeenCalledTimes(4);
+  });
+
+  it("filters pokemon based on type button on click", async () => {
+    setupRender();
+    expect(
+      await screen.findByText(responses.results[0].name)
+    ).toBeInTheDocument();
+    user.click(
+      screen.getByRole("button", { name: typeResponses.results[0].name })
+    );
+    expect(
+      screen.queryByText(responses.results[0].name)
+    ).not.toBeInTheDocument();
   });
 
   it.skip("calls api detail when one of the pokemon is clicked", async () => {

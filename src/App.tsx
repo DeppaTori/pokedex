@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { PokemonList } from "./PokemonList";
 import { Pokemon } from "./entity/Pokemon";
@@ -7,7 +7,8 @@ import { PokemonDetail as PokemonDetailType } from "./entity/PokemonDetail";
 import { PokemonDetail } from "./PokemonDetail";
 
 function App() {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  // const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const pokemons = useRef<Pokemon[]>([]);
   const [currentPokemon, setCurrentPokemon] = useState<PokemonDetailType>({
     name: "",
     ptype: "",
@@ -16,6 +17,7 @@ function App() {
   });
   const [pokemonAPIs, setPokemonAPIs] = useState<string[]>([]);
   const [pokemonTypes, setPokemonTypes] = useState<string[]>([]);
+  const [filteredPokemons, setFilteredPokemons] = useState<Pokemon[]>([]);
 
   const pokemonOnClick = (id: number) => {
     const callAPI = async () => {
@@ -53,7 +55,9 @@ function App() {
         };
       });
 
-      setPokemons(pokemonResult);
+      setFilteredPokemons(pokemonResult);
+      pokemons.current = pokemonResult;
+      // setPokemons(pokemonResult);
     };
 
     callAPI();
@@ -78,16 +82,24 @@ function App() {
     callTypesAPI();
   }, []);
 
+  const filterPokemon = (ptype: string) => {
+    setFilteredPokemons(
+      pokemons.current.filter((pokemon) => pokemon.ptypes.includes(ptype))
+    );
+  };
+
   return (
     <div className="App">
       <div>
         {pokemonTypes.map((ptype, index) => (
-          <button key={index}>{ptype}</button>
+          <button onClick={() => filterPokemon(ptype)} key={index}>
+            {ptype}
+          </button>
         ))}
       </div>
 
       <PokemonDetail pokemon={currentPokemon} />
-      <PokemonList pokemons={pokemons} onClick={pokemonOnClick} />
+      <PokemonList pokemons={filteredPokemons} onClick={pokemonOnClick} />
     </div>
   );
 }
