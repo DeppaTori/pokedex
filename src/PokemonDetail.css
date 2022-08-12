@@ -1,0 +1,32 @@
+.detail-container {
+  width: 800px;
+  height: 800px;
+  padding: 20px;
+  background-color: #e6e4c3;
+}
+.detail-title {
+  background-color: #182a54;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+.detail-title h3 {
+  padding: 0;
+  margin: 0;
+}
+.detail-content {
+  display: flex;
+  gap: 20px;
+}
+.detail-image {
+  margin-top: 20px;
+  background-color: #e8e7df;
+  border: 20px solid white;
+}
+.detail-info {
+  margin-top: 100px;
+  font-size: 20px;
+  color: #949491;
+  font-weight: bold;
+}

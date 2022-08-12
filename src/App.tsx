@@ -51,8 +51,8 @@ function App() {
 
   return (
     <div className="App">
-      <PokemonList pokemons={pokemons} onClick={pokemonOnClick} />
       <PokemonDetail pokemon={currentPokemon} />
+      <PokemonList pokemons={pokemons} onClick={pokemonOnClick} />
     </div>
   );
 }

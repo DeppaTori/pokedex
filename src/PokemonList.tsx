@@ -15,13 +15,19 @@ export const PokemonList = ({ pokemons, onClick }: PokemonListProps) => {
           key={index}
           onClick={() => onClick(pokemon.id)}
         >
-          <img
-            src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokemon.id
-              .toString()
-              .padStart(3, "0")}.png`}
-          />
-          <div>{pokemon.id.toString().padStart(3, "0")}</div>
-          <div>{pokemon.name}</div>
+          <div className="image-cropper">
+            <img
+              src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokemon.id
+                .toString()
+                .padStart(3, "0")}.png`}
+            />
+          </div>
+          <div className="pli-info">
+            <div className="number">
+              {pokemon.id.toString().padStart(3, "0")}
+            </div>
+            <div>{pokemon.name}</div>
+          </div>
         </div>
       ))}
     </div>
