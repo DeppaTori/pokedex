@@ -3,7 +3,6 @@ import "./App.css";
 import { PokemonList } from "./PokemonList";
 import { Pokemon } from "./entity/Pokemon";
 import { POKEMON_API } from "./constants";
-import { getNumberFromUrl } from "./helper";
 import { PokemonDetail as PokemonDetailType } from "./entity/PokemonDetail";
 import { PokemonDetail } from "./PokemonDetail";
 
@@ -15,6 +14,7 @@ function App() {
     pnumber: 0,
     pweight: 0,
   });
+  const [pokemonAPIs, setPokemonAPIs] = useState<string[]>([]);
 
   const pokemonOnClick = (id: number) => {
     const callAPI = async () => {
@@ -36,14 +36,34 @@ function App() {
 
   useEffect(() => {
     const callAPI = async () => {
-      const response = await fetch(`${POKEMON_API}/pokemon`);
-      const result = await response.json();
+      const results = await Promise.all(
+        pokemonAPIs.map(async (url: string) => {
+          const resp = await fetch(url);
+          const res = await resp.json();
+          return res;
+        })
+      );
 
-      const pokemonResult = result.results.map((item: any) => {
-        return { name: item.name, id: getNumberFromUrl(item.url) };
+      const pokemonResult = results.map((item: any) => {
+        return {
+          name: item.name,
+          id: item.id,
+          ptypes: item.types.map((ty: any) => ty.type.name),
+        };
       });
 
       setPokemons(pokemonResult);
+    };
+
+    callAPI();
+  }, [pokemonAPIs]);
+
+  useEffect(() => {
+    const callAPI = async () => {
+      const response = await fetch(`${POKEMON_API}/pokemon?offset=0&limit=905`);
+      const result = await response.json();
+
+      setPokemonAPIs(result.results.map((item: any) => item.url));
     };
 
     callAPI();
