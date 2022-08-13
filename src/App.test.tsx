@@ -113,7 +113,7 @@ describe("App", () => {
     ).not.toBeInTheDocument();
   });
 
-  it.skip("calls api detail when one of the pokemon is clicked", async () => {
+  it("calls api detail when one of the pokemon is clicked", async () => {
     jest
       .spyOn(window, "fetch")
       .mockReturnValueOnce(fetchResponseOk(responses))
@@ -129,7 +129,7 @@ describe("App", () => {
     expect(
       await screen.findByText(responseDetail.types[0].type.name)
     ).toBeInTheDocument();
-    expect(screen.getByText(responseDetail.weight)).toBeInTheDocument();
+    expect(await screen.findByText(responseDetail.weight)).toBeInTheDocument();
     expect(screen.getAllByText(responses.results[0].name)).toHaveLength(2);
     expect(screen.getAllByText("021")).toHaveLength(2);
     expect(window.fetch).toHaveBeenCalledTimes(5);
