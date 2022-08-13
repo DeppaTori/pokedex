@@ -1,6 +1,6 @@
 .detail-container {
-  width: 800px;
-  height: 800px;
+  min-width: 600px;
+  height: 590px;
   padding: 20px;
   background-color: #e6e4c3;
 }

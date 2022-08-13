@@ -90,16 +90,17 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <div className="buttons-container">
         {pokemonTypes.map((ptype, index) => (
           <button onClick={() => filterPokemon(ptype)} key={index}>
             {ptype}
           </button>
         ))}
       </div>
-
-      <PokemonDetail pokemon={currentPokemon} />
-      <PokemonList pokemons={filteredPokemons} onClick={pokemonOnClick} />
+      <div className="pokemon-information">
+        <PokemonDetail pokemon={currentPokemon} />
+        <PokemonList pokemons={filteredPokemons} onClick={pokemonOnClick} />
+      </div>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 .pokemon-list-container {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  min-width: 250px;
   gap: 10px;
+  height: 600px;
+  overflow-y: scroll;
 }
 .pokemon-list-item {
   background-color: #5a5c5a;
